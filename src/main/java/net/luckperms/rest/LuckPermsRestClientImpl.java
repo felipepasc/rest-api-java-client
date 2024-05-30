@@ -25,16 +25,12 @@
 
 package net.luckperms.rest;
 
-import net.luckperms.rest.service.ActionService;
-import net.luckperms.rest.service.EventService;
-import net.luckperms.rest.service.GroupService;
-import net.luckperms.rest.service.MiscService;
-import net.luckperms.rest.service.TrackService;
-import net.luckperms.rest.service.UserService;
+import net.luckperms.rest.service.*;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -90,6 +86,7 @@ class LuckPermsRestClientImpl implements LuckPermsRestClient {
         return this.groupService;
     }
 
+    @Override
     public TrackService tracks() {
         return this.trackService;
     }
@@ -151,8 +148,9 @@ class LuckPermsRestClientImpl implements LuckPermsRestClient {
         }
 
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public @NotNull Response intercept(@NotNull Chain chain) throws IOException {
             Request request = chain.request().newBuilder().header("Authorization", this.key).build();
+
             return chain.proceed(request);
         }
     }
